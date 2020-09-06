@@ -48,21 +48,17 @@ const CartProvider: React.FC = ({ children }) => {
         existentProduct => existentProduct.id === product.id,
       );
 
-      if (productsExists) {
-        setProducts(
-          products.map(existentProduct =>
-            existentProduct.id === product.id
-              ? { ...product, quantity: existentProduct.quantity + 1 }
-              : existentProduct,
-          ),
-        );
-      }
+      const newProduct = productsExists
+        ? productsExists.quantity + 1
+        : { ...product, quantity: 1 };
 
-      setProducts([...products, { ...product, quantity: 1 }]);
+      const updatedCart = [...products, newProduct];
+
+      setProducts(updatedCart);
 
       await AsyncStorage.setItem(
         '@GoMarketplace:products',
-        JSON.stringify(products),
+        JSON.stringify(updatedCart),
       );
     },
     [products],
